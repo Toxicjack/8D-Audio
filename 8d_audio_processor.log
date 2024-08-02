@@ -1,0 +1,178 @@
+2024-08-02 00:17:24,363 - audio_capture - INFO - Audio stream started successfully.
+2024-08-02 00:17:24,364 - app - INFO - 8D Sound Started
+2024-08-02 00:17:24,710 - app - WARNING - input overflow
+2024-08-02 00:17:24,878 - app - WARNING - input overflow
+2024-08-02 00:17:25,156 - app - WARNING - input overflow
+2024-08-02 00:17:25,355 - app - WARNING - input overflow
+2024-08-02 00:17:25,632 - app - WARNING - input overflow
+2024-08-02 00:17:25,832 - app - WARNING - input overflow
+2024-08-02 00:17:26,101 - app - WARNING - input overflow
+2024-08-02 00:17:26,268 - app - WARNING - input overflow
+2024-08-02 00:17:26,535 - app - WARNING - input overflow
+2024-08-02 00:17:26,725 - app - WARNING - input overflow
+2024-08-02 00:17:26,991 - app - WARNING - input overflow
+2024-08-02 00:17:27,191 - app - WARNING - input overflow
+2024-08-02 00:17:27,459 - app - WARNING - input overflow
+2024-08-02 00:17:27,658 - app - WARNING - input overflow
+2024-08-02 00:17:27,927 - app - WARNING - input overflow
+2024-08-02 00:17:28,126 - app - WARNING - input overflow
+2024-08-02 00:17:28,414 - app - WARNING - input overflow
+2024-08-02 00:17:28,612 - app - WARNING - input overflow
+2024-08-02 00:17:28,880 - app - WARNING - input overflow
+2024-08-02 00:17:29,079 - app - WARNING - input overflow
+2024-08-02 00:17:29,347 - app - WARNING - input overflow
+2024-08-02 00:17:29,524 - app - WARNING - input overflow
+2024-08-02 00:17:29,791 - app - WARNING - input overflow
+2024-08-02 00:17:29,989 - app - WARNING - input overflow
+2024-08-02 00:17:30,258 - app - WARNING - input overflow
+2024-08-02 00:17:30,425 - app - WARNING - input overflow
+2024-08-02 00:17:30,501 - audio_capture - INFO - Audio stream started successfully.
+2024-08-02 00:17:30,502 - app - INFO - 8D Sound Started
+2024-08-02 00:17:30,692 - app - WARNING - input overflow
+2024-08-02 00:17:30,884 - app - WARNING - input overflow
+2024-08-02 00:17:30,931 - app - WARNING - input overflow
+2024-08-02 00:17:31,110 - app - WARNING - input overflow
+2024-08-02 00:17:31,152 - app - WARNING - input overflow
+2024-08-02 00:17:31,336 - app - WARNING - input overflow
+2024-08-02 00:17:31,382 - app - WARNING - input overflow
+2024-08-02 00:17:31,571 - app - WARNING - input overflow
+2024-08-02 00:17:31,612 - app - WARNING - input overflow
+2024-08-02 00:17:31,796 - app - WARNING - input overflow
+2024-08-02 00:17:31,842 - app - WARNING - input overflow
+2024-08-02 00:17:32,027 - app - WARNING - input overflow
+2024-08-02 00:17:32,072 - app - WARNING - input overflow
+2024-08-02 00:17:32,253 - app - WARNING - input overflow
+2024-08-02 00:17:32,302 - app - WARNING - input overflow
+2024-08-02 00:17:32,489 - app - WARNING - input overflow
+2024-08-02 00:17:32,532 - app - WARNING - input overflow
+2024-08-02 00:17:32,711 - app - WARNING - input overflow
+2024-08-02 00:17:32,762 - app - WARNING - input overflow
+2024-08-02 00:17:32,949 - app - WARNING - input overflow
+2024-08-02 00:17:32,991 - app - WARNING - input overflow
+2024-08-02 00:17:33,179 - app - WARNING - input overflow
+2024-08-02 00:20:27,497 - app - INFO - 8D Sound Started
+2024-08-02 00:20:27,507 - audio_capture - INFO - Audio stream started successfully.
+2024-08-02 00:20:27,847 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:27,847 - app - WARNING - Status: input overflow
+2024-08-02 00:20:28,086 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:28,086 - app - WARNING - Status: input overflow
+2024-08-02 00:20:28,340 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:28,340 - app - WARNING - Status: input overflow
+2024-08-02 00:20:28,592 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:28,592 - app - WARNING - Status: input overflow
+2024-08-02 00:20:28,831 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:28,831 - app - WARNING - Status: input overflow
+2024-08-02 00:20:29,277 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:29,277 - app - WARNING - Status: input overflow
+2024-08-02 00:20:29,713 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:29,713 - app - WARNING - Status: input overflow
+2024-08-02 00:20:30,169 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:30,169 - app - WARNING - Status: input overflow
+2024-08-02 00:20:30,408 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:30,408 - app - WARNING - Status: input overflow
+2024-08-02 00:20:30,852 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:30,852 - app - WARNING - Status: input overflow
+2024-08-02 00:20:31,305 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:31,305 - app - WARNING - Status: input overflow
+2024-08-02 00:20:31,545 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:31,545 - app - WARNING - Status: input overflow
+2024-08-02 00:20:32,000 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:32,000 - app - WARNING - Status: input overflow
+2024-08-02 00:20:32,251 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:32,252 - app - WARNING - Status: input overflow
+2024-08-02 00:20:32,492 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:32,492 - app - WARNING - Status: input overflow
+2024-08-02 00:20:32,936 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:32,936 - app - WARNING - Status: input overflow
+2024-08-02 00:20:33,372 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:33,372 - app - WARNING - Status: input overflow
+2024-08-02 00:20:33,828 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:33,828 - app - WARNING - Status: input overflow
+2024-08-02 00:20:34,081 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:34,081 - app - WARNING - Status: input overflow
+2024-08-02 00:20:34,321 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:34,321 - app - WARNING - Status: input overflow
+2024-08-02 00:20:34,766 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:34,766 - app - WARNING - Status: input overflow
+2024-08-02 00:20:35,204 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:35,204 - app - WARNING - Status: input overflow
+2024-08-02 00:20:35,664 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:35,664 - app - WARNING - Status: input overflow
+2024-08-02 00:20:35,904 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:35,904 - app - WARNING - Status: input overflow
+2024-08-02 00:20:36,169 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:36,171 - app - WARNING - Status: input overflow
+2024-08-02 00:20:36,428 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:36,428 - app - WARNING - Status: input overflow
+2024-08-02 00:20:36,685 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:36,685 - app - WARNING - Status: input overflow
+2024-08-02 00:20:36,941 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:36,941 - app - WARNING - Status: input overflow
+2024-08-02 00:20:37,194 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:37,194 - app - WARNING - Status: input overflow
+2024-08-02 00:20:37,453 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:37,453 - app - WARNING - Status: input overflow
+2024-08-02 00:20:37,714 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:37,714 - app - WARNING - Status: input overflow
+2024-08-02 00:20:37,981 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:37,981 - app - WARNING - Status: input overflow
+2024-08-02 00:20:38,235 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:38,235 - app - WARNING - Status: input overflow
+2024-08-02 00:20:38,491 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:38,491 - app - WARNING - Status: input overflow
+2024-08-02 00:20:38,743 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:38,743 - app - WARNING - Status: input overflow
+2024-08-02 00:20:38,995 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:38,996 - app - WARNING - Status: input overflow
+2024-08-02 00:20:39,450 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:39,450 - app - WARNING - Status: input overflow
+2024-08-02 00:20:39,703 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:39,703 - app - WARNING - Status: input overflow
+2024-08-02 00:20:39,964 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:39,964 - app - WARNING - Status: input overflow
+2024-08-02 00:20:40,227 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:40,227 - app - WARNING - Status: input overflow
+2024-08-02 00:20:40,483 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:40,483 - app - WARNING - Status: input overflow
+2024-08-02 00:20:40,741 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:40,741 - app - WARNING - Status: input overflow
+2024-08-02 00:20:40,994 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:40,994 - app - WARNING - Status: input overflow
+2024-08-02 00:20:41,233 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:41,233 - app - WARNING - Status: input overflow
+2024-08-02 00:20:41,493 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:41,493 - app - WARNING - Status: input overflow
+2024-08-02 00:20:41,753 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:41,753 - app - WARNING - Status: input overflow
+2024-08-02 00:20:42,013 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:42,013 - app - WARNING - Status: input overflow
+2024-08-02 00:20:42,272 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:42,272 - app - WARNING - Status: input overflow
+2024-08-02 00:20:42,532 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:42,532 - app - WARNING - Status: input overflow
+2024-08-02 00:20:42,783 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:42,784 - app - WARNING - Status: input overflow
+2024-08-02 00:20:43,024 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:43,024 - app - WARNING - Status: input overflow
+2024-08-02 00:20:43,283 - audio_capture - WARNING - Status: input overflow
+2024-08-02 00:20:43,283 - app - WARNING - Status: input overflow
+2024-08-02 00:20:43,485 - audio_capture - INFO - Audio stream stopped successfully.
+2024-08-02 00:20:43,703 - app - INFO - 8D Sound Stopped
+2024-08-02 00:31:15,027 - app - INFO - 8D Sound Started
+2024-08-02 00:31:15,037 - audio_capture - INFO - Audio stream started successfully.
+2024-08-02 00:39:09,594 - app - INFO - 8D Sound Started
+2024-08-02 00:39:09,604 - audio_capture - INFO - Audio stream started successfully.
+2024-08-02 00:46:27,221 - app - INFO - 8D Sound Started
+2024-08-02 00:46:27,232 - audio_capture - INFO - Audio stream started successfully.
+2024-08-02 00:48:27,210 - app - INFO - Syncing Audio...
+2024-08-02 00:48:27,210 - app - INFO - Audio Synced Successfully.
+2024-08-02 00:48:30,957 - app - INFO - 8D Sound Started
+2024-08-02 00:48:30,967 - audio_capture - INFO - Audio stream started successfully.
+2024-08-02 00:57:05,781 - app - INFO - Syncing Audio...
+2024-08-02 00:57:05,782 - app - INFO - Audio Synced Successfully.
+2024-08-02 00:57:07,167 - app - INFO - 8D Sound Started
+2024-08-02 00:57:07,177 - audio_capture - INFO - Audio stream started successfully.
+2024-08-02 00:57:13,947 - app - INFO - Syncing Audio...
+2024-08-02 00:57:13,947 - app - INFO - Audio Synced Successfully.
+2024-08-02 00:57:39,623 - app - INFO - Syncing Audio...
+2024-08-02 00:57:39,624 - app - INFO - Audio Synced Successfully.

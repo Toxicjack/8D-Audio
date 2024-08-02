@@ -1,0 +1,69 @@
+# 8D Audio Processor
+
+## Overview
+The 8D Audio Processor is an application designed to enhance audio experiences by adding 8D sound effects. This project allows users to listen to music and other audio files with immersive 8D sound effects.
+
+## Features
+- **8D Sound Effect**: Experience audio in an immersive 8D environment.
+- **Real-time Audio Processing**: Process live audio input from your microphone.
+- **Audio File Processing**: Process audio files from your local system.
+- **Customizable Effects**: Adjust panning speed, reverb amount, and equalizer settings.
+- **Theming**: Choose from different themes for the application interface.
+
+## Installation
+
+### Requirements
+- Python 3.8 or later
+- PyQt5
+- PyInstaller
+- pydub
+- sounddevice
+
+### Setup
+1. Clone the repository:
+    ```sh
+    git clone https://github.com/yourusername/8D-Audio-Processor.git
+    cd 8D-Audio-Processor
+    ```
+
+2. Install dependencies:
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+3. Run the application:
+    ```sh
+    python main.py
+    ```
+
+## Creating an Executable
+To create an executable file for the application, follow these steps:
+
+1. Install PyInstaller:
+    ```sh
+    pip install pyinstaller
+    ```
+
+2. Create the executable:
+    ```sh
+    pyinstaller --onefile --windowed main.py
+    ```
+
+3. The executable will be located in the `dist` folder.
+
+## Usage
+1. Launch the application.
+2. Select the desired theme and adjust the audio effects using the sliders.
+3. Click "Start 8D Sound" to start processing live audio.
+4. Click "Sync Audio" to process and play an audio file.
+5. Click "Stop 8D Sound" to stop the audio processing.
+
+## Contributing
+Feel free to fork this repository and submit pull requests. For major changes, please open an issue to discuss what you would like to change.
+
+## License
+[MIT](LICENSE)
+
+## Contact
+For any inquiries or feedback, please contact [your email].
+
