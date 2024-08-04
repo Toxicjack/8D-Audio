@@ -2,28 +2,22 @@
 
 This repository contains the 8D Audio Processor project.
 
-## Setup Instructions
+## Download and Reassemble the ZIP File
 
-1. **Clone the repository**:
-   - Download the repository as a ZIP file or use Git to clone it:
-     ```sh
-     git clone https://github.com/Toxicjack/8D-Audio.git
-     cd 8D-Audio
-     ```
+Due to file size limitations, the ZIP file has been split into smaller parts. Follow these steps to reassemble and extract the files:
 
-2. **Install Python and dependencies**:
-   - Ensure you have Python 3.x installed on your computer.
-   - Install the required packages using pip:
-     ```sh
-     pip install PyQt5 pydub sounddevice numpy
-     ```
+### On Windows
 
-3. **Run the main script**:
-   - Execute the main script to start the application:
-     ```sh
-     python main.py
-     ```
+1. Download all the split parts (`part1.zip`, `part2.zip`, etc.).
+2. Use 7-Zip to reassemble and extract the files:
+   - Right-click on the first part (`part1.zip`).
+   - Select `7-Zip` > `Extract here`.
 
-## License
+### On Mac/Linux
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+1. Download all the split parts (`part1.zip`, `part2.zip`, etc.).
+2. Open a terminal and navigate to the directory containing the split parts.
+3. Run the following command to reassemble and extract the files:
+   ```sh
+   cat part*.zip > combined.zip
+   unzip combined.zip
