@@ -8,12 +8,13 @@ The 8D Audio Processor is an application designed to enhance audio experiences b
 - **Real-time Audio Processing**: Process live audio input from your microphone.
 - **Audio File Processing**: Process audio files from your local system.
 - **Customizable Effects**: Adjust panning speed, reverb amount, and equalizer settings.
-- **Theming**: Choose from different themes for the application interface.
+- **Volume Control**: Increase or decrease playback volume with an easy slider.
+- **Dynamic Themes**: Choose from multiple themes including a color-changing dynamic mode.
 
 ## Installation
 
 ### Requirements
-- Python 3.8 or later
+- Python 3.11 or later
 - PyQt5
 - PyInstaller
 - pydub
