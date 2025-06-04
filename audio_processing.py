@@ -26,10 +26,14 @@ def apply_3d_surround(samples, sample_rate, segments=16):
 
     return np.frombuffer(output.raw_data, dtype=np.int16)
 
-def process_audio(samples, sample_rate, pan_speed=0.1, reverb_amount=0.3, eq_gains=None, surround=True):
+def process_audio(samples, sample_rate, pan_speed=0.1, reverb_amount=0.3, eq_gains=None, surround=True, volume=1.0):
     try:
         if surround:
             samples = apply_3d_surround(samples, sample_rate)
+
+        if volume != 1.0:
+            samples = np.clip(samples.astype(np.float32) * volume, -32768, 32767).astype(np.int16)
+
         # Additional processing like equalizer and reverb can be added here
         return samples
     except Exception as e:
@@ -45,11 +49,11 @@ def _load_audio(file_path):
     return samples, sample_rate
 
 
-def play_processed_audio(file_path, pan_speed=0.1, reverb_amount=0.3, eq_gains=None, surround=True):
+def play_processed_audio(file_path, pan_speed=0.1, reverb_amount=0.3, eq_gains=None, surround=True, volume=1.0):
     """Load a file, apply processing and play the result."""
     try:
         samples, sample_rate = _load_audio(file_path)
-        processed = process_audio(samples, sample_rate, pan_speed, reverb_amount, eq_gains, surround)
+        processed = process_audio(samples, sample_rate, pan_speed, reverb_amount, eq_gains, surround, volume)
         if processed is not None:
             sd.play(processed, samplerate=sample_rate)
             sd.wait()
@@ -59,11 +63,11 @@ def play_processed_audio(file_path, pan_speed=0.1, reverb_amount=0.3, eq_gains=N
         logger.error(f"Failed to play processed audio: {e}")
 
 
-def save_processed_audio(file_path, output_path, pan_speed=0.1, reverb_amount=0.3, eq_gains=None, surround=True):
+def save_processed_audio(file_path, output_path, pan_speed=0.1, reverb_amount=0.3, eq_gains=None, surround=True, volume=1.0):
     """Load a file, apply processing and save the result."""
     try:
         samples, sample_rate = _load_audio(file_path)
-        processed = process_audio(samples, sample_rate, pan_speed, reverb_amount, eq_gains, surround)
+        processed = process_audio(samples, sample_rate, pan_speed, reverb_amount, eq_gains, surround, volume)
         if processed is None:
             logger.error("Processed audio was None; nothing to save.")
             return

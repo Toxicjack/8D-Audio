@@ -24,6 +24,9 @@ This repository contains the 8D Audio Processor project.
      python main.py
      ```
 
+## New in v4.4.0-alpha
+- Added a volume control slider to easily adjust playback volume.
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.

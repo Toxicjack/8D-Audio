@@ -14,14 +14,14 @@ class AudioProcessingQueue:
         self.thread.daemon = True
         self.thread.start()
 
-    def add_to_queue(self, indata, pan_speed, reverb_amount):
-        self.queue.put((indata, pan_speed, reverb_amount))
+    def add_to_queue(self, indata, pan_speed, reverb_amount, volume):
+        self.queue.put((indata, pan_speed, reverb_amount, volume))
 
     def process_queue(self):
         while True:
-            indata, pan_speed, reverb_amount = self.queue.get()
+            indata, pan_speed, reverb_amount, volume = self.queue.get()
             try:
-                processed_data = process_audio(indata, self.sample_rate, pan_speed, reverb_amount)
+                processed_data = process_audio(indata, self.sample_rate, pan_speed, reverb_amount, volume=volume)
                 if processed_data is not None:
                     sd.play(processed_data, samplerate=self.sample_rate)
             except Exception as e:
