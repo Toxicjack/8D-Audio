@@ -14,7 +14,7 @@ from pydub import AudioSegment
 configure_logging()
 logger = logging.getLogger(__name__)
 
-VERSION = "2.0.1"  # Version update with gradient fix
+VERSION = "4.4.0-alpha"  # Updated version with volume control
 
 class AudioThread(QThread):
     audio_signal = pyqtSignal(np.ndarray, int)
@@ -105,6 +105,19 @@ class MainWindow(QWidget):
         self.reverb_label.setStyleSheet("color: white;")
         layout.addWidget(self.reverb_label)
 
+        self.volume_slider = QSlider(Qt.Horizontal)
+        self.volume_slider.setRange(0, 200)
+        self.volume_slider.setValue(100)
+        self.volume_slider.setTickInterval(10)
+        self.volume_slider.setTickPosition(QSlider.TicksBelow)
+        self.volume_slider.valueChanged.connect(self.update_volume_label)
+        layout.addWidget(self.volume_slider)
+
+        self.volume_label = QLabel('Volume: 100%')
+        self.volume_label.setFont(QFont('Arial', 12))
+        self.volume_label.setStyleSheet("color: white;")
+        layout.addWidget(self.volume_label)
+
         # Add equalizer controls
         self.eq_labels = []
         self.eq_sliders = []
@@ -149,6 +162,9 @@ class MainWindow(QWidget):
     def update_reverb_label(self):
         self.reverb_label.setText(f'Reverb Amount: {self.reverb_slider.value()}')
 
+    def update_volume_label(self):
+        self.volume_label.setText(f'Volume: {self.volume_slider.value()}%')
+
     def get_eq_gains(self):
         return [slider.value() for slider in self.eq_sliders]
 
@@ -157,7 +173,8 @@ class MainWindow(QWidget):
             logger.warning(f"Status: {status}")
         pan_speed = self.pan_slider.value() / 100.0
         reverb_amount = self.reverb_slider.value() / 100.0
-        self.audio_processing_queue.add_to_queue(indata, pan_speed, reverb_amount)
+        volume = self.volume_slider.value() / 100.0
+        self.audio_processing_queue.add_to_queue(indata, pan_speed, reverb_amount, volume)
 
     def start_8d_sound(self):
         if self.audio_thread is None:
@@ -201,7 +218,8 @@ class MainWindow(QWidget):
             audio = AudioSegment.from_file(file_path)
             samples = np.array(audio.get_array_of_samples())
             sample_rate = audio.frame_rate
-            processed_samples = process_audio(samples, sample_rate)
+            volume = self.volume_slider.value() / 100.0
+            processed_samples = process_audio(samples, sample_rate, volume=volume)
             sd.play(processed_samples, samplerate=sample_rate)
             logger.info("Playing processed audio file.")
         except Exception as e:
