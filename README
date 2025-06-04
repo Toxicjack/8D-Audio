@@ -10,6 +10,8 @@ The 8D Audio Processor is an application designed to enhance audio experiences b
 - **Customizable Effects**: Adjust panning speed, reverb amount, and equalizer settings.
 - **Theming**: Choose from different themes for the application interface.
 
+The audio engine applies these settings in real time, using a built-in equalizer and simple reverb to enhance playback.
+
 ## Installation
 
 ### Requirements

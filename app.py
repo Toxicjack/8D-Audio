@@ -157,7 +157,8 @@ class MainWindow(QWidget):
             logger.warning(f"Status: {status}")
         pan_speed = self.pan_slider.value() / 100.0
         reverb_amount = self.reverb_slider.value() / 100.0
-        self.audio_processing_queue.add_to_queue(indata, pan_speed, reverb_amount)
+        eq_gains = self.get_eq_gains()
+        self.audio_processing_queue.add_to_queue(indata, pan_speed, reverb_amount, eq_gains)
 
     def start_8d_sound(self):
         if self.audio_thread is None:
