@@ -58,6 +58,15 @@ To create an executable file for the application, follow these steps:
 4. Click "Sync Audio" to process and play an audio file.
 5. Click "Stop 8D Sound" to stop the audio processing.
 
+## Command Line Usage
+You can also process files directly from the command line using
+`audio_player.py`:
+
+```sh
+python audio_player.py my_song.mp3             # play with 8D effects
+python audio_player.py my_song.mp3 --save out.wav  # save processed audio
+```
+
 ## Contributing
 Feel free to fork this repository and submit pull requests. For major changes, please open an issue to discuss what you would like to change.
 

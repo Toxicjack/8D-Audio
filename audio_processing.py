@@ -2,6 +2,7 @@ from pydub import AudioSegment
 import numpy as np
 import math
 import logging
+import sounddevice as sd
 
 logger = logging.getLogger(__name__)
 
@@ -34,3 +35,45 @@ def process_audio(samples, sample_rate, pan_speed=0.1, reverb_amount=0.3, eq_gai
     except Exception as e:
         logger.error(f"Error processing audio: {e}")
         return None
+
+
+def _load_audio(file_path):
+    """Load an audio file using pydub and return samples and sample rate."""
+    audio = AudioSegment.from_file(file_path)
+    samples = np.array(audio.get_array_of_samples())
+    sample_rate = audio.frame_rate
+    return samples, sample_rate
+
+
+def play_processed_audio(file_path, pan_speed=0.1, reverb_amount=0.3, eq_gains=None, surround=True):
+    """Load a file, apply processing and play the result."""
+    try:
+        samples, sample_rate = _load_audio(file_path)
+        processed = process_audio(samples, sample_rate, pan_speed, reverb_amount, eq_gains, surround)
+        if processed is not None:
+            sd.play(processed, samplerate=sample_rate)
+            sd.wait()
+        else:
+            logger.error("Processed audio was None; nothing to play.")
+    except Exception as e:
+        logger.error(f"Failed to play processed audio: {e}")
+
+
+def save_processed_audio(file_path, output_path, pan_speed=0.1, reverb_amount=0.3, eq_gains=None, surround=True):
+    """Load a file, apply processing and save the result."""
+    try:
+        samples, sample_rate = _load_audio(file_path)
+        processed = process_audio(samples, sample_rate, pan_speed, reverb_amount, eq_gains, surround)
+        if processed is None:
+            logger.error("Processed audio was None; nothing to save.")
+            return
+        audio_segment = AudioSegment(
+            processed.tobytes(),
+            frame_rate=sample_rate,
+            sample_width=processed.dtype.itemsize,
+            channels=2,
+        )
+        fmt = output_path.split('.')[-1]
+        audio_segment.export(output_path, format=fmt)
+    except Exception as e:
+        logger.error(f"Failed to save processed audio: {e}")
