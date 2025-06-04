@@ -15,7 +15,12 @@ class AudioProcessingQueue:
         self.thread.start()
 
     def add_to_queue(self, indata, pan_speed, reverb_amount):
-        self.queue.put((indata, pan_speed, reverb_amount))
+        """Add a copy of the incoming data to the processing queue."""
+        # The buffer provided by ``sounddevice`` is reused after the callback
+        # returns.  If we store it directly, the data may be overwritten before
+        # it is processed.  Copy the array to ensure the queued data remains
+        # intact.
+        self.queue.put((indata.copy(), pan_speed, reverb_amount))
 
     def process_queue(self):
         while True:
