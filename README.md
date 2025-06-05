@@ -15,7 +15,7 @@ This repository contains the 8D Audio Processor project.
    - Ensure you have Python 3.11 or later installed on your computer.
    - Install the required packages using pip:
      ```sh
-     pip install PyQt5 pydub sounddevice numpy
+     pip install -r requirements.txt
      ```
 
 3. **Run the main script**:
