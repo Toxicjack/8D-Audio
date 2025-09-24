@@ -38,3 +38,8 @@ class AudioCapture:
                     self.logger.warning(f"Status: {status}")
                 callback(indata, frames, time, status)
         return wrapped_callback
+
+    def set_device(self, device):
+        """Update the active input device."""
+        self.device = device
+        self.logger.info(f"Audio capture device set to: {device if device is not None else 'default'}")

@@ -1,5 +1,17 @@
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel,
-                             QSlider, QHBoxLayout, QComboBox, QFileDialog)
+import os
+
+from PyQt5.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+    QPushButton,
+    QLabel,
+    QSlider,
+    QHBoxLayout,
+    QComboBox,
+    QFileDialog,
+    QCheckBox,
+    QMessageBox,
+)
 from PyQt5.QtGui import QFont, QPalette, QColor, QLinearGradient, QBrush, QGradient
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 import numpy as np
@@ -14,7 +26,7 @@ from pydub import AudioSegment
 configure_logging()
 logger = logging.getLogger(__name__)
 
-VERSION = "4.4.0-alpha"  # Updated version with volume control
+VERSION = "4.5.0"  # Updated version with expanded feature set
 
 class AudioThread(QThread):
     audio_signal = pyqtSignal(np.ndarray, int)
@@ -35,10 +47,11 @@ class AudioThread(QThread):
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.init_ui()
         self.audio_capture = AudioCapture()
         self.audio_thread = None
         self.audio_processing_queue = AudioProcessingQueue(self.audio_capture.samplerate)
+        self.current_file = None
+        self.init_ui()
 
     def init_ui(self):
         self.setWindowTitle(f'8D Audio Processor v{VERSION}')
@@ -76,6 +89,16 @@ class MainWindow(QWidget):
         self.sync_button.setStyleSheet("background-color: #28a745; color: white; font-size: 14px;")
         self.sync_button.clicked.connect(self.sync_audio)
         button_layout.addWidget(self.sync_button)
+
+        self.open_button = QPushButton('Open Audio File')
+        self.open_button.setStyleSheet("background-color: #6f42c1; color: white; font-size: 14px;")
+        self.open_button.clicked.connect(self.open_audio_file)
+        button_layout.addWidget(self.open_button)
+
+        self.save_button = QPushButton('Save Processed Audio')
+        self.save_button.setStyleSheet("background-color: #fd7e14; color: white; font-size: 14px;")
+        self.save_button.clicked.connect(self.save_processed_audio)
+        button_layout.addWidget(self.save_button)
 
         layout.addLayout(button_layout)
 
@@ -134,10 +157,20 @@ class MainWindow(QWidget):
             slider.setValue(0)
             slider.setTickInterval(10)
             slider.setTickPosition(QSlider.TicksLeft)
+            slider.valueChanged.connect(self.handle_eq_change)
             self.eq_sliders.append(slider)
             eq_layout.addWidget(slider)
 
         layout.addLayout(eq_layout)
+
+        # Add 8D surround toggle
+        surround_layout = QHBoxLayout()
+        self.surround_checkbox = QCheckBox('Enable 8D Surround')
+        self.surround_checkbox.setChecked(True)
+        self.surround_checkbox.setStyleSheet("color: white;")
+        surround_layout.addWidget(self.surround_checkbox)
+
+        layout.addLayout(surround_layout)
 
         # Add theme selection
         theme_layout = QHBoxLayout()
@@ -152,6 +185,40 @@ class MainWindow(QWidget):
         theme_layout.addWidget(self.theme_combo)
 
         layout.addLayout(theme_layout)
+
+        # Add equalizer presets
+        eq_preset_layout = QHBoxLayout()
+        self.eq_preset_label = QLabel('Equalizer Preset:')
+        self.eq_preset_label.setFont(QFont('Arial', 12))
+        self.eq_preset_label.setStyleSheet("color: white;")
+        eq_preset_layout.addWidget(self.eq_preset_label)
+
+        self.eq_presets = {
+            "Flat": [0] * 10,
+            "Bass Boost": [8, 6, 4, 2, 0, -2, -4, -6, -6, -6],
+            "Treble Boost": [-6, -6, -4, -2, 0, 2, 4, 6, 8, 8],
+            "Vocal Boost": [-4, -2, 2, 4, 6, 4, 2, 0, -2, -4],
+        }
+        self.eq_preset_combo = QComboBox()
+        self.eq_preset_combo.addItems(list(self.eq_presets.keys()) + ["Custom"])
+        self.eq_preset_combo.currentIndexChanged.connect(self.apply_eq_preset)
+        eq_preset_layout.addWidget(self.eq_preset_combo)
+
+        layout.addLayout(eq_preset_layout)
+
+        # Add audio input device selection
+        device_layout = QHBoxLayout()
+        self.device_label = QLabel('Input Device:')
+        self.device_label.setFont(QFont('Arial', 12))
+        self.device_label.setStyleSheet("color: white;")
+        device_layout.addWidget(self.device_label)
+
+        self.device_combo = QComboBox()
+        self.device_combo.currentIndexChanged.connect(self.change_input_device)
+        device_layout.addWidget(self.device_combo)
+        self.populate_input_devices()
+
+        layout.addLayout(device_layout)
 
         self.setLayout(layout)
         self.show()
@@ -174,10 +241,20 @@ class MainWindow(QWidget):
         pan_speed = self.pan_slider.value() / 100.0
         reverb_amount = self.reverb_slider.value() / 100.0
         volume = self.volume_slider.value() / 100.0
-        self.audio_processing_queue.add_to_queue(indata, pan_speed, reverb_amount, volume)
+        eq_gains = self.get_eq_gains()
+        surround_enabled = self.surround_checkbox.isChecked()
+        self.audio_processing_queue.add_to_queue(
+            indata,
+            pan_speed,
+            reverb_amount,
+            volume,
+            eq_gains,
+            surround_enabled,
+        )
 
     def start_8d_sound(self):
         if self.audio_thread is None:
+            self.audio_processing_queue.reset_state()
             self.audio_thread = AudioThread(self.audio_capture, self.audio_callback)
             self.audio_thread.start()
             self.label.setText('8D Sound Started')
@@ -190,6 +267,7 @@ class MainWindow(QWidget):
             sd.stop()
             self.label.setText('8D Sound Stopped')
             logger.info('8D Sound Stopped')
+            self.audio_processing_queue.reset_state()
 
     def change_theme(self, index):
         themes = {
@@ -209,7 +287,8 @@ class MainWindow(QWidget):
     def sync_audio(self):
         self.label.setText('Syncing Audio...')
         logger.info('Syncing Audio...')
-        # Implement audio syncing logic here
+        self.audio_processing_queue.clear()
+        self.audio_processing_queue.reset_state()
         self.label.setText('Audio Synced Successfully.')
         logger.info('Audio Synced Successfully.')
 
@@ -219,8 +298,148 @@ class MainWindow(QWidget):
             samples = np.array(audio.get_array_of_samples())
             sample_rate = audio.frame_rate
             volume = self.volume_slider.value() / 100.0
-            processed_samples = process_audio(samples, sample_rate, volume=volume)
+            eq_gains = self.get_eq_gains()
+            surround_enabled = self.surround_checkbox.isChecked()
+            processed_samples = process_audio(
+                samples,
+                sample_rate,
+                pan_speed=self.pan_slider.value() / 100.0,
+                reverb_amount=self.reverb_slider.value() / 100.0,
+                eq_gains=eq_gains,
+                surround=surround_enabled,
+                volume=volume,
+            )
+            if processed_samples is None:
+                raise ValueError('Processed audio returned no data.')
             sd.play(processed_samples, samplerate=sample_rate)
+            self.label.setText(f'Playing: {os.path.basename(file_path)}')
             logger.info("Playing processed audio file.")
         except Exception as e:
             logger.error(f"Error processing audio file: {e}")
+
+    def open_audio_file(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            'Open Audio File',
+            '',
+            'Audio Files (*.mp3 *.wav *.flac *.ogg *.m4a)'
+        )
+        if file_path:
+            self.current_file = file_path
+            file_name = os.path.basename(file_path)
+            self.label.setText(f'Loaded file: {file_name}')
+            logger.info(f"Loaded audio file: {file_path}")
+            self.process_and_play_file(file_path)
+
+    def save_processed_audio(self):
+        if not self.current_file:
+            QMessageBox.warning(self, 'No File Loaded', 'Load an audio file before saving the processed output.')
+            return
+
+        save_path, _ = QFileDialog.getSaveFileName(
+            self,
+            'Save Processed Audio',
+            '',
+            'WAV Files (*.wav);;FLAC Files (*.flac);;MP3 Files (*.mp3)'
+        )
+        if not save_path:
+            return
+
+        try:
+            eq_gains = self.get_eq_gains()
+            surround_enabled = self.surround_checkbox.isChecked()
+            process_audio_kwargs = dict(
+                pan_speed=self.pan_slider.value() / 100.0,
+                reverb_amount=self.reverb_slider.value() / 100.0,
+                eq_gains=eq_gains,
+                surround=surround_enabled,
+                volume=self.volume_slider.value() / 100.0,
+            )
+            samples, sample_rate = self.audio_processing_queue.load_audio_file(self.current_file)
+            processed_samples = process_audio(samples, sample_rate, **process_audio_kwargs)
+            if processed_samples is None:
+                raise ValueError('Processed audio buffer was empty.')
+            self.audio_processing_queue.save_audio_file(
+                processed_samples,
+                sample_rate,
+                save_path,
+            )
+            QMessageBox.information(self, 'Success', f'Processed audio saved to {save_path}')
+            self.label.setText(f'Saved file: {os.path.basename(save_path)}')
+            logger.info(f"Saved processed audio to {save_path}")
+        except Exception as e:
+            QMessageBox.critical(self, 'Error', f'Failed to save processed audio: {e}')
+            logger.error(f"Error saving processed audio: {e}")
+
+    def populate_input_devices(self):
+        try:
+            devices = sd.query_devices()
+        except Exception as e:
+            logger.error(f"Unable to query audio devices: {e}")
+            self.device_combo.addItem('Default Input', None)
+            return
+
+        input_devices = [
+            (index, device['name'])
+            for index, device in enumerate(devices)
+            if device.get('max_input_channels', 0) > 0
+        ]
+
+        if not input_devices:
+            self.device_combo.addItem('Default Input', None)
+            return
+
+        self.device_combo.addItem('System Default', None)
+        for index, name in input_devices:
+            self.device_combo.addItem(name, index)
+
+        if self.audio_capture.device is not None:
+            for idx in range(self.device_combo.count()):
+                if self.device_combo.itemData(idx) == self.audio_capture.device:
+                    self.device_combo.setCurrentIndex(idx)
+                    break
+        else:
+            self.device_combo.setCurrentIndex(0)
+
+    def change_input_device(self, _index):
+        device_index = self.device_combo.currentData()
+        if device_index is None:
+            self.audio_capture.set_device(None)
+            logger.info('Using default input device.')
+            return
+
+        was_running = self.audio_thread is not None
+        if was_running:
+            self.stop_8d_sound()
+
+        self.audio_capture.set_device(device_index)
+        logger.info(f"Input device changed to index {device_index}")
+
+        if was_running:
+            self.start_8d_sound()
+
+    def apply_eq_preset(self, _index):
+        preset_name = self.eq_preset_combo.currentText()
+        gains = self.eq_presets.get(preset_name)
+        if gains is None:
+            return
+        for slider, gain in zip(self.eq_sliders, gains):
+            slider.blockSignals(True)
+            slider.setValue(gain)
+            slider.blockSignals(False)
+        logger.info(f"Applied EQ preset: {preset_name}")
+
+    def handle_eq_change(self, _value):
+        current_values = self.get_eq_gains()
+        for name, gains in self.eq_presets.items():
+            if list(gains) == current_values:
+                if self.eq_preset_combo.currentText() != name:
+                    self.eq_preset_combo.blockSignals(True)
+                    self.eq_preset_combo.setCurrentText(name)
+                    self.eq_preset_combo.blockSignals(False)
+                return
+
+        if self.eq_preset_combo.currentText() != 'Custom':
+            self.eq_preset_combo.blockSignals(True)
+            self.eq_preset_combo.setCurrentText('Custom')
+            self.eq_preset_combo.blockSignals(False)
