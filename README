@@ -10,6 +10,7 @@ The 8D Audio Processor is an application designed to enhance audio experiences b
 - **Customizable Effects**: Adjust panning speed, reverb amount, and equalizer settings with real-time processing.
 - **Volume Control**: Increase or decrease playback volume with an easy slider.
 - **Theming**: Choose from different themes for the application interface.
+- **Device Selection**: Pick both input and output devices without leaving the app.
 - **Device Selection**: Pick both input and output devices without leaving the app and refresh the list when hardware changes.
 - **Surround Toggle**: Enable or disable the 8D surround field on demand.
 - **One-click Saving**: Export processed audio to WAV, MP3, or FLAC directly from the UI.
@@ -17,11 +18,14 @@ The 8D Audio Processor is an application designed to enhance audio experiences b
 ## Installation
 
 ### Requirements
-- Python 3.8 or later
-- PyQt5
+- Python 3.14 (project targets 3.14; earlier interpreters run in compatibility mode)
+- PyQt5 >= 5.15.11
 - PyInstaller
 - pydub
 - sounddevice
+
+### Current Alpha Release
+- v4.6.1-alpha targets Python 3.14, adds stronger validation around decoded audio metadata, and improves UI dependency checks.
 
 ### Setup
 1. Clone the repository:
@@ -32,7 +36,7 @@ The 8D Audio Processor is an application designed to enhance audio experiences b
 
 2. Install dependencies:
     ```sh
-    pip install -r requirements.txt
+    pip install -r requirements
     ```
 
 3. Run the application:

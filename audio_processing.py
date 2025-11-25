@@ -121,6 +121,9 @@ def process_audio(
 
     try:
         if samples.size == 0:
+            return samples.astype(np.float32)
+
+        samples = np.array(samples, dtype=np.float64, copy=True)
             return samples
 
         original_dtype = samples.dtype
@@ -140,6 +143,10 @@ def process_audio(
 
         samples = np.clip(samples, -1.0, 1.0)
 
+        return samples.astype(np.float32, copy=False)
+
+        samples = np.clip(samples, -1.0, 1.0)
+
         if np.issubdtype(original_dtype, np.integer):
             samples = (samples * 32767).astype(np.int16)
         else:
@@ -151,6 +158,58 @@ def process_audio(
         return None
 
 
+def _normalize_samples(raw: np.ndarray, channels: int, sample_width: int) -> np.ndarray:
+    """Convert interleaved integer samples into normalised floating-point stereo."""
+
+    if channels <= 0:
+        raise ValueError("Audio file contains no channels")
+
+    if raw.size % channels != 0:
+        raise ValueError("Sample data is not divisible by channel count")
+
+    if sample_width <= 0:
+        raise ValueError("Audio sample width must be positive")
+
+    if np.issubdtype(raw.dtype, np.floating):
+        centered = raw.astype(np.float64)
+        max_abs_value = float(np.max(np.abs(centered)) or 1.0)
+    elif sample_width == 1 and np.issubdtype(raw.dtype, np.uint8):
+        centered = raw.astype(np.float64) - 128.0
+        max_abs_value = 128.0
+    elif np.issubdtype(raw.dtype, np.integer):
+        max_abs_value = float(2 ** (8 * sample_width - 1))
+        if max_abs_value <= 0:
+            raise ValueError("Invalid sample width for audio data")
+        centered = raw.astype(np.float64)
+    else:
+        raise TypeError(f"Unsupported sample dtype: {raw.dtype}")
+
+    if max_abs_value == 0:
+        max_abs_value = 1.0
+
+    samples = centered.reshape((-1, channels)) / max_abs_value
+    return _ensure_stereo(samples).astype(np.float32, copy=False)
+
+
+def _validate_audio_segment(audio: AudioSegment) -> None:
+    """Ensure decoded audio metadata is usable before processing."""
+
+    if audio.frame_rate <= 0:
+        raise ValueError("Audio file reports an invalid sample rate")
+    if audio.channels <= 0:
+        raise ValueError("Audio file contains no channels")
+    if audio.sample_width <= 0:
+        raise ValueError("Audio file reports an invalid sample width")
+
+
+def load_audio_file(file_path: str) -> Tuple[np.ndarray, int, int]:
+    """Load an audio file and return stereo-normalised samples, sample rate and channel count."""
+
+    audio = AudioSegment.from_file(file_path)
+    _validate_audio_segment(audio)
+    raw_samples = np.array(audio.get_array_of_samples())
+    channels = audio.channels
+    samples = _normalize_samples(raw_samples, channels, audio.sample_width)
 def load_audio(file_path: str) -> Tuple[np.ndarray, int, int]:
     """Load an audio file using pydub and return normalised samples, sample rate and channel count."""
 
@@ -181,6 +240,7 @@ def play_processed_audio(
     """Load a file, apply processing and play the result."""
 
     try:
+        samples, sample_rate, _ = load_audio_file(file_path)
         samples, sample_rate, _ = load_audio(file_path)
         processed = process_audio(
             samples,
@@ -213,6 +273,7 @@ def save_processed_audio(
     """Load a file, apply processing and save the result."""
 
     try:
+        samples, sample_rate, _ = load_audio_file(file_path)
         samples, sample_rate, _ = load_audio(file_path)
         processed = process_audio(
             samples,

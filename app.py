@@ -1,3 +1,11 @@
+import importlib.util
+
+if importlib.util.find_spec("PyQt5") is None:
+    raise ImportError(
+        "PyQt5 is required for the desktop UI. Install it with `pip install PyQt5>=5.15` "
+        "or use the CLI entry points in main.py."
+    )
+
 from PyQt5.QtWidgets import (
     QWidget,
     QVBoxLayout,
@@ -10,6 +18,20 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QCheckBox,
 )
+from PyQt5.QtGui import QFont, QPalette, QColor, QLinearGradient, QBrush, QGradient
+from PyQt5.QtCore import Qt, QThread, pyqtSignal
+import numpy as np
+import logging
+import sounddevice as sd
+from audio_capture import AudioCapture
+from audio_processing import load_audio_file, process_audio, save_processed_audio
+from audio_processing_queue import AudioProcessingQueue
+from logging_config import configure_logging
+from versioning import VERSION, require_runtime_python
+
+configure_logging()
+logger = logging.getLogger(__name__)
+require_runtime_python(logger)
 from PyQt5.QtGui import QFont, QPalette, QColor, QLinearGradient, QBrush, QGradient
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 import numpy as np
@@ -380,6 +402,7 @@ class MainWindow(QWidget):
 
     def process_and_play_file(self, file_path):
         try:
+            samples, sample_rate, _ = load_audio_file(file_path)
             samples, sample_rate, channels = load_audio(file_path)
             if channels == 0:
                 raise ValueError('Audio file has no channels to process.')
@@ -401,6 +424,7 @@ class MainWindow(QWidget):
             if processed_samples is None:
                 raise ValueError('Failed to process the selected file.')
             device = self.audio_processing_queue.output_device
+            sd.play(processed_samples.astype(np.float32), samplerate=sample_rate, device=device)
             if np.issubdtype(processed_samples.dtype, np.integer):
                 playback_samples = processed_samples.astype(np.float32) / 32768.0
             else:
