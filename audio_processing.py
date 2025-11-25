@@ -124,6 +124,10 @@ def process_audio(
             return samples.astype(np.float32)
 
         samples = np.array(samples, dtype=np.float64, copy=True)
+            return samples
+
+        original_dtype = samples.dtype
+        samples = samples.astype(np.float32)
         samples = _ensure_stereo(samples)
 
         if surround:
@@ -140,6 +144,15 @@ def process_audio(
         samples = np.clip(samples, -1.0, 1.0)
 
         return samples.astype(np.float32, copy=False)
+
+        samples = np.clip(samples, -1.0, 1.0)
+
+        if np.issubdtype(original_dtype, np.integer):
+            samples = (samples * 32767).astype(np.int16)
+        else:
+            samples = samples.astype(np.float32)
+
+        return samples
     except Exception as exc:
         logger.error("Error processing audio: %s", exc)
         return None
@@ -197,6 +210,20 @@ def load_audio_file(file_path: str) -> Tuple[np.ndarray, int, int]:
     raw_samples = np.array(audio.get_array_of_samples())
     channels = audio.channels
     samples = _normalize_samples(raw_samples, channels, audio.sample_width)
+def load_audio(file_path: str) -> Tuple[np.ndarray, int, int]:
+    """Load an audio file using pydub and return normalised samples, sample rate and channel count."""
+
+    audio = AudioSegment.from_file(file_path)
+    samples = np.array(audio.get_array_of_samples())
+    channels = audio.channels
+    samples = samples.reshape((-1, channels)).astype(np.float32)
+
+    # Scale based on bit depth to keep values in the -1..1 range instead of
+    # assuming 16-bit content.
+    if audio.sample_width > 0:
+        max_amplitude = float(1 << (audio.sample_width * 8 - 1))
+        samples /= max_amplitude
+
     sample_rate = audio.frame_rate
     return samples, sample_rate, channels
 
@@ -214,6 +241,7 @@ def play_processed_audio(
 
     try:
         samples, sample_rate, _ = load_audio_file(file_path)
+        samples, sample_rate, _ = load_audio(file_path)
         processed = process_audio(
             samples,
             sample_rate,
@@ -246,6 +274,7 @@ def save_processed_audio(
 
     try:
         samples, sample_rate, _ = load_audio_file(file_path)
+        samples, sample_rate, _ = load_audio(file_path)
         processed = process_audio(
             samples,
             sample_rate,
