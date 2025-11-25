@@ -151,13 +151,20 @@ def process_audio(
         return None
 
 
-def _load_audio(file_path: str) -> Tuple[np.ndarray, int, int]:
-    """Load an audio file using pydub and return samples, sample rate and channel count."""
+def load_audio(file_path: str) -> Tuple[np.ndarray, int, int]:
+    """Load an audio file using pydub and return normalised samples, sample rate and channel count."""
 
     audio = AudioSegment.from_file(file_path)
     samples = np.array(audio.get_array_of_samples())
     channels = audio.channels
-    samples = samples.reshape((-1, channels)).astype(np.float32) / 32768.0
+    samples = samples.reshape((-1, channels)).astype(np.float32)
+
+    # Scale based on bit depth to keep values in the -1..1 range instead of
+    # assuming 16-bit content.
+    if audio.sample_width > 0:
+        max_amplitude = float(1 << (audio.sample_width * 8 - 1))
+        samples /= max_amplitude
+
     sample_rate = audio.frame_rate
     return samples, sample_rate, channels
 
@@ -174,7 +181,7 @@ def play_processed_audio(
     """Load a file, apply processing and play the result."""
 
     try:
-        samples, sample_rate, _ = _load_audio(file_path)
+        samples, sample_rate, _ = load_audio(file_path)
         processed = process_audio(
             samples,
             sample_rate,
@@ -206,7 +213,7 @@ def save_processed_audio(
     """Load a file, apply processing and save the result."""
 
     try:
-        samples, sample_rate, _ = _load_audio(file_path)
+        samples, sample_rate, _ = load_audio(file_path)
         processed = process_audio(
             samples,
             sample_rate,

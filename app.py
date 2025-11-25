@@ -16,10 +16,9 @@ import numpy as np
 import logging
 import sounddevice as sd
 from audio_capture import AudioCapture
-from audio_processing import process_audio, save_processed_audio
+from audio_processing import load_audio, process_audio, save_processed_audio
 from audio_processing_queue import AudioProcessingQueue
 from logging_config import configure_logging
-from pydub import AudioSegment
 
 configure_logging()
 logger = logging.getLogger(__name__)
@@ -119,6 +118,11 @@ class MainWindow(QWidget):
         device_layout.addWidget(self.output_combo)
 
         layout.addLayout(device_layout)
+
+        self.refresh_button = QPushButton('Refresh Devices')
+        self.refresh_button.setStyleSheet("background-color: #17a2b8; color: white; font-size: 12px;")
+        self.refresh_button.clicked.connect(self.populate_audio_devices)
+        layout.addWidget(self.refresh_button)
 
         self.pan_slider = QSlider(Qt.Horizontal)
         self.pan_slider.setRange(1, 100)
@@ -245,6 +249,8 @@ class MainWindow(QWidget):
             self.output_combo.setCurrentIndex(default_output_index)
             self.on_output_device_changed(default_output_index)
 
+        self.update_device_controls()
+
     def _get_default_device(self, position):
         default = sd.default.device
         if isinstance(default, (tuple, list)) and len(default) > position:
@@ -264,6 +270,16 @@ class MainWindow(QWidget):
     def update_volume_label(self):
         self.volume_label.setText(f'Volume: {self.volume_slider.value()}%')
 
+    def update_device_controls(self):
+        has_input = bool(self.input_devices)
+        has_output = bool(self.output_devices)
+        self.start_button.setEnabled(has_input)
+        self.sync_button.setEnabled(has_output)
+        if not has_input:
+            self.status_label.setText('No input devices detected')
+        elif not has_output:
+            self.status_label.setText('No output devices detected')
+
     def get_eq_gains(self):
         return [slider.value() for slider in self.eq_sliders]
 
@@ -278,6 +294,10 @@ class MainWindow(QWidget):
         self.audio_processing_queue.add_to_queue(indata, pan_speed, reverb_amount, volume, eq_gains, surround_enabled)
 
     def start_8d_sound(self):
+        if not self.input_devices:
+            QMessageBox.warning(self, 'No Input', 'No input device is available to start streaming.')
+            return
+
         if self.audio_thread is None:
             input_device = self.selected_input_device
             if input_device is not None:
@@ -360,13 +380,9 @@ class MainWindow(QWidget):
 
     def process_and_play_file(self, file_path):
         try:
-            audio = AudioSegment.from_file(file_path)
-            samples = np.array(audio.get_array_of_samples()).astype(np.float32)
-            channels = audio.channels
+            samples, sample_rate, channels = load_audio(file_path)
             if channels == 0:
                 raise ValueError('Audio file has no channels to process.')
-            samples = samples.reshape((-1, channels)) / 32768.0
-            sample_rate = audio.frame_rate
             volume = self.volume_slider.value() / 100.0
             pan_speed = self.pan_slider.value() / 100.0
             reverb_amount = self.reverb_slider.value() / 100.0
@@ -385,7 +401,11 @@ class MainWindow(QWidget):
             if processed_samples is None:
                 raise ValueError('Failed to process the selected file.')
             device = self.audio_processing_queue.output_device
-            sd.play(processed_samples.astype(np.float32), samplerate=sample_rate, device=device)
+            if np.issubdtype(processed_samples.dtype, np.integer):
+                playback_samples = processed_samples.astype(np.float32) / 32768.0
+            else:
+                playback_samples = processed_samples.astype(np.float32)
+            sd.play(playback_samples, samplerate=sample_rate, device=device)
             logger.info("Playing processed audio file.")
         except Exception as e:
             logger.error(f"Error processing audio file: {e}")
@@ -409,6 +429,9 @@ class MainWindow(QWidget):
         )
         if not output_path:
             return
+
+        if '.' not in output_path:
+            output_path = f"{output_path}.wav"
 
         volume = self.volume_slider.value() / 100.0
         pan_speed = self.pan_slider.value() / 100.0

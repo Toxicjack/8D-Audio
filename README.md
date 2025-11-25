@@ -25,9 +25,9 @@ This repository contains the 8D Audio Processor project.
      ```
 
 ## New in v4.5.0-alpha
-- Device selection menus for both audio input and output.
+- Device selection menus for both audio input and output, plus a refresh action to rescan hardware.
 - Optional surround toggle with improved panning, equalizer and reverb processing.
-- File sync now processes selections with all live settings applied.
+- File sync now processes selections with all live settings applied and respects source bit depth when loading.
 - Save processed audio directly from the interface.
 
 ## License
