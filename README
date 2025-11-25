@@ -18,13 +18,13 @@ The 8D Audio Processor is an application designed to enhance audio experiences b
 
 ### Requirements
 - Python 3.14 (project targets 3.14; earlier interpreters run in compatibility mode)
-- PyQt5
+- PyQt5 >= 5.15.11
 - PyInstaller
 - pydub
 - sounddevice
 
 ### Current Alpha Release
-- v4.6.0-alpha targets Python 3.14 and adds stronger validation around decoded audio metadata.
+- v4.6.1-alpha targets Python 3.14, adds stronger validation around decoded audio metadata, and improves UI dependency checks.
 
 ### Setup
 1. Clone the repository:
@@ -35,7 +35,7 @@ The 8D Audio Processor is an application designed to enhance audio experiences b
 
 2. Install dependencies:
     ```sh
-    pip install -r requirements.txt
+    pip install -r requirements
     ```
 
 3. Run the application:

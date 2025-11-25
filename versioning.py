@@ -6,7 +6,7 @@ import logging
 import sys
 from typing import Tuple
 
-VERSION: str = "4.6.0-alpha"
+VERSION: str = "4.6.1-alpha"
 MIN_PYTHON_VERSION: Tuple[int, int] = (3, 14)
 
 

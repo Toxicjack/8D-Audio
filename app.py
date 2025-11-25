@@ -1,3 +1,11 @@
+import importlib.util
+
+if importlib.util.find_spec("PyQt5") is None:
+    raise ImportError(
+        "PyQt5 is required for the desktop UI. Install it with `pip install PyQt5>=5.15` "
+        "or use the CLI entry points in main.py."
+    )
+
 from PyQt5.QtWidgets import (
     QWidget,
     QVBoxLayout,

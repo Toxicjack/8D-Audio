@@ -123,7 +123,7 @@ def process_audio(
         if samples.size == 0:
             return samples.astype(np.float32)
 
-        samples = samples.astype(np.float32)
+        samples = np.array(samples, dtype=np.float64, copy=True)
         samples = _ensure_stereo(samples)
 
         if surround:
@@ -139,7 +139,7 @@ def process_audio(
 
         samples = np.clip(samples, -1.0, 1.0)
 
-        return samples.astype(np.float32)
+        return samples.astype(np.float32, copy=False)
     except Exception as exc:
         logger.error("Error processing audio: %s", exc)
         return None
@@ -158,21 +158,24 @@ def _normalize_samples(raw: np.ndarray, channels: int, sample_width: int) -> np.
         raise ValueError("Audio sample width must be positive")
 
     if np.issubdtype(raw.dtype, np.floating):
-        centered = raw.astype(np.float32)
+        centered = raw.astype(np.float64)
         max_abs_value = float(np.max(np.abs(centered)) or 1.0)
     elif sample_width == 1 and np.issubdtype(raw.dtype, np.uint8):
-        centered = raw.astype(np.float32) - 128.0
+        centered = raw.astype(np.float64) - 128.0
         max_abs_value = 128.0
     elif np.issubdtype(raw.dtype, np.integer):
         max_abs_value = float(2 ** (8 * sample_width - 1))
         if max_abs_value <= 0:
             raise ValueError("Invalid sample width for audio data")
-        centered = raw.astype(np.float32)
+        centered = raw.astype(np.float64)
     else:
         raise TypeError(f"Unsupported sample dtype: {raw.dtype}")
 
+    if max_abs_value == 0:
+        max_abs_value = 1.0
+
     samples = centered.reshape((-1, channels)) / max_abs_value
-    return _ensure_stereo(samples)
+    return _ensure_stereo(samples).astype(np.float32, copy=False)
 
 
 def _validate_audio_segment(audio: AudioSegment) -> None:

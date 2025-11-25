@@ -15,7 +15,7 @@ This repository contains the 8D Audio Processor project.
    - Ensure you have Python 3.14 installed (earlier versions run in compatibility mode).
    - Install the required packages using pip:
      ```sh
-     pip install PyQt5 pydub sounddevice numpy
+     pip install "PyQt5>=5.15.11" pydub sounddevice numpy
      ```
 
 3. **Run the main script**:
@@ -24,10 +24,11 @@ This repository contains the 8D Audio Processor project.
      python main.py
      ```
 
-## New in v4.6.0-alpha
+## New in v4.6.1-alpha
 - Targets Python 3.14 with runtime compatibility warnings on older interpreters.
 - Centralized version metadata and CLI `--version` reporting.
-- Stricter audio validation to catch invalid sample width, sample rate, or channel counts earlier.
+- Stricter audio validation plus more robust PyQt5 detection for the desktop UI.
+- Higher-precision DSP pipeline to reduce distortion during 8D processing.
 
 ## License
 
