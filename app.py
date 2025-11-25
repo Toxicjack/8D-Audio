@@ -19,11 +19,11 @@ from audio_capture import AudioCapture
 from audio_processing import load_audio_file, process_audio, save_processed_audio
 from audio_processing_queue import AudioProcessingQueue
 from logging_config import configure_logging
+from versioning import VERSION, require_runtime_python
 
 configure_logging()
 logger = logging.getLogger(__name__)
-
-VERSION = "4.5.0-alpha"  # Updated version with device selection and advanced processing
+require_runtime_python(logger)
 
 class AudioThread(QThread):
     audio_signal = pyqtSignal(np.ndarray, int)
