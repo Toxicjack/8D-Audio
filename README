@@ -6,10 +6,13 @@ The 8D Audio Processor is an application designed to enhance audio experiences b
 ## Features
 - **8D Sound Effect**: Experience audio in an immersive 8D environment.
 - **Real-time Audio Processing**: Process live audio input from your microphone.
-- **Audio File Processing**: Process audio files from your local system.
-- **Customizable Effects**: Adjust panning speed, reverb amount, and equalizer settings.
+- **Audio File Processing**: Process audio files from your local system with the same live effect chain.
+- **Customizable Effects**: Adjust panning speed, reverb amount, and equalizer settings with real-time processing.
 - **Volume Control**: Increase or decrease playback volume with an easy slider.
 - **Theming**: Choose from different themes for the application interface.
+- **Device Selection**: Pick both input and output devices without leaving the app and refresh the list when hardware changes.
+- **Surround Toggle**: Enable or disable the 8D surround field on demand.
+- **One-click Saving**: Export processed audio to WAV, MP3, or FLAC directly from the UI.
 
 ## Installation
 
@@ -56,8 +59,9 @@ To create an executable file for the application, follow these steps:
 1. Launch the application.
 2. Select the desired theme and adjust the audio effects using the sliders.
 3. Click "Start 8D Sound" to start processing live audio.
-4. Click "Sync Audio" to process and play an audio file.
-5. Click "Stop 8D Sound" to stop the audio processing.
+4. Click "Sync Audio" to process and play an audio file using the current effect settings.
+5. Click "Save Processed Audio" to export an effected version of a track.
+6. Click "Stop 8D Sound" to stop the audio processing.
 
 ## Command Line Usage
 You can also process files directly from the command line using
@@ -66,6 +70,9 @@ You can also process files directly from the command line using
 ```sh
 python audio_player.py my_song.mp3             # play with 8D effects
 python audio_player.py my_song.mp3 --save out.wav  # save processed audio
+# Optional extras
+python audio_player.py my_song.mp3 --disable_surround  # turn off panning
+python audio_player.py my_song.mp3 --eq_gains 3 0 -2 0 1 2 0 0 -1 0  # tweak the 10-band EQ
 ```
 
 ## Contributing

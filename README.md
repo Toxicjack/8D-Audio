@@ -24,8 +24,11 @@ This repository contains the 8D Audio Processor project.
      python main.py
      ```
 
-## New in v4.4.0-alpha
-- Added a volume control slider to easily adjust playback volume.
+## New in v4.5.0-alpha
+- Device selection menus for both audio input and output, plus a refresh action to rescan hardware.
+- Optional surround toggle with improved panning, equalizer and reverb processing.
+- File sync now processes selections with all live settings applied and respects source bit depth when loading.
+- Save processed audio directly from the interface.
 
 ## License
 
